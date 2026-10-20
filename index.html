@@ -1,0 +1,2298 @@
+
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Domótica Home - Control Inteligente</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --dimmer: #9b59b6;
+            --standby: #f1c40f;
+            --program: #1abc9c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Estilos de Login */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            animation: bounceIn 1s ease-out;
+        }
+
+        .login-screen h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 3px solid var(--accent);
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .login-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Estilos del Dashboard */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .consumption-display {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .consumption-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .consumption-unit {
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        .device-list {
+            list-style: none;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .device-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .device-status.off {
+            background-color: #ccc;
+        }
+
+        .device-status.warning {
+            background-color: var(--warning);
+        }
+
+        .device-status.critical {
+            background-color: var(--accent);
+        }
+
+        .device-status.dimmed {
+            background-color: var(--dimmer);
+        }
+
+        .device-status.standby {
+            background-color: var(--standby);
+        }
+
+        .device-status.programmed {
+            background-color: var(--program);
+        }
+
+        .device-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-dimmer {
+            background-color: var(--dimmer);
+            color: white;
+        }
+
+        .btn-standby {
+            background-color: var(--standby);
+            color: white;
+        }
+
+        .btn-program {
+            background-color: var(--program);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .btn.active {
+            box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .alert-card {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-title {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .alert-list {
+            list-style: none;
+        }
+
+        .alert-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ffeeba;
+        }
+
+        .phantom-mode {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .phantom-title {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .phantom-controls {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .energy-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .energy-item {
+            text-align: center;
+        }
+
+        .energy-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .energy-label {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .consumption-chart {
+            height: 200px;
+            margin: 20px 0;
+            background: linear-gradient(to top, #3498db33, #3498db11);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to top, var(--secondary), #2c3e50);
+            border-radius: 3px 3px 0 0;
+            transition: height 0.5s;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .contact-section {
+            display: none;
+            padding: 40px 0;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .contact-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .contact-header p {
+            font-size: 1.2rem;
+            color: var(--dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+
+        .member-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            font-size: 0.9rem;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .company-info {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .company-info h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .company-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .detail-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .detail-content h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .detail-content p {
+            color: var(--dark);
+        }
+
+        .report-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .program-modal {
+            max-width: 400px;
+        }
+
+        .program-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .program-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .program-option input {
+            margin-right: 5px;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .time-inputs input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Control por Voz */
+        .voice-control {
+            background: var(--primary);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1;
+        }
+
+        .voice-control h2 {
+            color: white;
+            margin-bottom: 10px;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .voice-control > p {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .voice-btn {
+            background: white;
+            border: none;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            cursor: pointer;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            font-size: 3rem;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-btn:active {
+            transform: scale(0.95);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: var(--accent);
+        }
+
+        .voice-status {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            min-height: 35px;
+            color: white;
+        }
+
+        .voice-feedback {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            min-height: 30px;
+            font-weight: bold;
+            color: white;
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .command-examples {
+            margin-top: 20px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        /* Animaciones */
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,107,139,0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255,107,139,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,107,139,0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--secondary); }
+            50% { box-shadow: 0 0 15px var(--secondary); }
+        }
+
+        /* Responsive para Landscape */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .login-screen {
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .login-screen h1 {
+                font-size: 2.5rem;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .main-content {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .device-controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-screen h1 {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .voice-control {
+                padding: 20px;
+            }
+            
+            .voice-btn {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Ajustes específicos para pantallas pequeñas en landscape */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .login-screen {
+                padding: 5px;
+            }
+            
+            .login-screen h1 {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+            
+            .login-form {
+                padding: 15px;
+            }
+            
+            .login-form input {
+                padding: 10px;
+                margin: 5px 0;
+            }
+            
+            .login-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .device-item {
+                padding: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div class="login-screen" id="loginScreen">
+        <h1>🏠 Domótica Home</h1>
+        <div class="login-form">
+            <h2>¡Bienvenido!</h2>
+            <input type="text" id="username" placeholder="Ingresa tu nombre">
+            <button class="login-btn" id="loginBtn">Acceder</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="dashboard" class="dashboard-section" style="display: none;">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-icon">🏠</span>
+                        <h1>Domótica Home</h1>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div class="welcome-text">¡Hola, <span id="userName">Usuario</span>!</div>
+                    </div>
+                    <nav>
+                        <ul>
+                            <li><a href="https://kabertpro.github.io/sistemadomotico-vozhome/#" class="nav-link active" data-target="dashboard">Inicio</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="dashboard">
+                <div class="main-content">
+                    <!-- Control por Voz -->
+                    <div class="voice-control">
+                        <h2>🎤 Control por Voz</h2>
+                        <p>Presiona el micrófono y di un comando</p>
+                        <button class="voice-btn" id="voiceBtn">🎤</button>
+                        <div class="voice-status" id="voiceStatus">Presiona para hablar</div>
+                        <div class="voice-feedback" id="voiceFeedback"></div>
+                        <div class="command-examples">
+                            <strong>Ejemplos de comandos:</strong><br>
+                            "encender luces led de sala de estar" • "apagar computadora de oficina"<br>
+                            "atenuar luces led de dormitorio principal" • "modo standby consolas"
+                        </div>
+                    </div>
+
+                    <!-- Sala de estar -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Sala de Estar</h2>
+                            <span class="card-icon">🛋️</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">1.2</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="luces-sala"></span>
+                                    <span>Luces LED</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="luces-sala">Apagar</button>
+                                    <button class="btn btn-dimmer" data-device="luces-sala">Atenuar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status warning" data-device="aire-sala"></span>
+                                    <span>Aire Acondicionado</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="aire-sala">Apagar</button>
+                                    <button class="btn btn-program" data-device="aire-sala">Modo Eco</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="tv"></span>
+                                    <span>Televisor</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="tv">Apagar</button>
+                                    <button class="btn btn-standby" data-device="tv">Standby</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">45%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">3.2 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cocina -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Cocina</h2>
+                            <span class="card-icon">🍳</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">2.9</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="refrigerador"></span>
+                                    <span>Refrigerador</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="refrigerador">Apagar</button>
+                                    <button class="btn btn-program" data-device="refrigerador">Modo Ahorro</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status critical" data-device="horno"></span>
+                                    <span>Horno Eléctrico</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-danger btn-power" data-device="horno">Apagar</button>
+                                    <button class="btn btn-program" data-device="horno">Programar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="lavavajillas"></span>
+                                    <span>Lavavajillas</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="lavavajillas">Apagar</button>
+                                    <button class="btn btn-program" data-device="lavavajillas">Programar</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">72%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">5.1 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dormitorio Principal -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Dormitorio Principal</h2>
+                            <span class="card-icon">🛏️</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">1.0</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="luces-dormitorio"></span>
+                                    <span>Luces LED</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="luces-dormitorio">Apagar</button>
+                                    <button class="btn btn-dimmer" data-device="luces-dormitorio">Atenuar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status off" data-device="aire-dormitorio"></span>
+                                    <span>Aire Acondicionado</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-primary btn-power" data-device="aire-dormitorio">Encender</button>
+                                    <button class="btn btn-program" data-device="aire-dormitorio">Programar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="cargadores"></span>
+                                    <span>Cargadores</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="cargadores">Apagar</button>
+                                    <button class="btn btn-program" data-device="cargadores">Programar</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">18%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">1.2 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Habitación de niños -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Habitación Niños</h2>
+                            <span class="card-icon">🧸</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">0.8</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="luces-ninos"></span>
+                                    <span>Luces LED</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="luces-ninos">Apagar</button>
+                                    <button class="btn btn-dimmer" data-device="luces-ninos">Atenuar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status warning" data-device="computadora-ninos"></span>
+                                    <span>Computadora</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="computadora-ninos">Apagar</button>
+                                    <button class="btn btn-standby" data-device="computadora-ninos">Standby</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="consolas"></span>
+                                    <span>Consolas</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="consolas">Apagar</button>
+                                    <button class="btn btn-standby" data-device="consolas">Standby</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">22%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">1.5 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Baño -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Baño</h2>
+                            <span class="card-icon">🚿</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">0.4</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="calentador"></span>
+                                    <span>Calentador Agua</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="calentador">Apagar</button>
+                                    <button class="btn btn-program" data-device="calentador">Programar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="ventilacion"></span>
+                                    <span>Ventilación</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="ventilacion">Apagar</button>
+                                    <button class="btn btn-program" data-device="ventilacion">Temporizar</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="iluminacion-bano"></span>
+                                    <span>Iluminación</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="iluminacion-bano">Apagar</button>
+                                    <button class="btn btn-program" data-device="iluminacion-bano">Sensor</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">12%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">0.8 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Oficina -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Oficina</h2>
+                            <span class="card-icon">💻</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">1.4</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <ul class="device-list">
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="pc-oficina"></span>
+                                    <span>Computadora</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="pc-oficina">Apagar</button>
+                                    <button class="btn btn-program" data-device="pc-oficina">Modo Ahorro</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="impresora"></span>
+                                    <span>Impresora</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="impresora">Apagar</button>
+                                    <button class="btn btn-standby" data-device="impresora">Standby</button>
+                                </div>
+                            </li>
+                            <li class="device-item">
+                                <div class="device-info">
+                                    <span class="device-status" data-device="iluminacion-oficina"></span>
+                                    <span>Iluminación</span>
+                                </div>
+                                <div class="device-controls">
+                                    <button class="btn btn-outline btn-power" data-device="iluminacion-oficina">Apagar</button>
+                                    <button class="btn btn-dimmer" data-device="iluminacion-oficina">Atenuar</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">28%</div>
+                                <div class="energy-label">Consumo</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">2.1 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <!-- Resumen de consumo -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Resumen de Consumo</h2>
+                            <span class="card-icon">📊</span>
+                        </div>
+                        <div class="consumption-display">
+                            <span class="consumption-value">7.5</span>
+                            <span class="consumption-unit">kW</span>
+                        </div>
+                        <div class="consumption-chart" id="consumptionChart"><div class="chart-bar" style="height: 49.0909px; left: 20px;"></div><div class="chart-bar" style="height: 42.0779px; left: 18.3333px;"></div><div class="chart-bar" style="height: 35.0649px; left: 16.6667px;"></div><div class="chart-bar" style="height: 28.0519px; left: 15px;"></div><div class="chart-bar" style="height: 23.3766px; left: 13.3333px;"></div><div class="chart-bar" style="height: 35.0649px; left: 11.6667px;"></div><div class="chart-bar" style="height: 65.4545px; left: 10px;"></div><div class="chart-bar" style="height: 81.8182px; left: 8.33333px;"></div><div class="chart-bar" style="height: 98.1818px; left: 6.66667px;"></div><div class="chart-bar" style="height: 119.221px; left: 5px;"></div><div class="chart-bar" style="height: 135.584px; left: 3.33333px;"></div><div class="chart-bar" style="height: 144.935px; left: 1.66667px;"></div><div class="chart-bar" style="height: 151.948px; left: 0px;"></div><div class="chart-bar" style="height: 158.961px; left: -1.66667px;"></div><div class="chart-bar" style="height: 168.312px; left: -3.33333px;"></div><div class="chart-bar" style="height: 180px; left: -5px;"></div><div class="chart-bar" style="height: 175.325px; left: -6.66667px;"></div><div class="chart-bar" style="height: 168.312px; left: -8.33333px;"></div><div class="chart-bar" style="height: 158.961px; left: -10px;"></div><div class="chart-bar" style="height: 144.935px; left: -11.6667px;"></div><div class="chart-bar" style="height: 128.571px; left: -13.3333px;"></div><div class="chart-bar" style="height: 98.1818px; left: -15px;"></div><div class="chart-bar" style="height: 72.4675px; left: -16.6667px;"></div><div class="chart-bar" style="height: 58.4416px; left: -18.3333px;"></div></div>
+                        <div class="chart-labels">
+                            <span>00:00</span>
+                            <span>06:00</span>
+                            <span>12:00</span>
+                            <span>18:00</span>
+                            <span>23:59</span>
+                        </div>
+                        <div class="energy-summary">
+                            <div class="energy-item">
+                                <div class="energy-value">14.2 kWh</div>
+                                <div class="energy-label">Hoy</div>
+                            </div>
+                            <div class="energy-item">
+                                <div class="energy-value">98.5 kWh</div>
+                                <div class="energy-label">Este Mes</div>
+                            </div>
+                        </div>
+                        <div class="report-section">
+                            <button class="btn btn-primary" id="generateReport">Generar Reporte PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- Alertas -->
+                    <div class="card alert-card">
+                        <div class="card-header">
+                            <h2 class="card-title alert-title">Alertas</h2>
+                            <span class="card-icon">⚠️</span>
+                        </div>
+                        <ul class="alert-list">
+                            <li class="alert-item">
+                                <strong>Cocina:</strong> Horno eléctrico con consumo elevado
+                            </li>
+                            <li class="alert-item">
+                                <strong>Habitación Niños:</strong> Computadora encendida por más de 4 horas
+                            </li>
+                            <li class="alert-item">
+                                <strong>Sala de Estar:</strong> Aire acondicionado en modo no eficiente
+                            </li>
+                        </ul>
+                        <button class="btn btn-primary" style="margin-top: 15px; width: 100%;">
+                            Ver Todas las Alertas
+                        </button>
+                    </div>
+
+                    <!-- Modo Fantasma -->
+                    <div class="card phantom-mode">
+                        <div class="card-header">
+                            <h2 class="card-title phantom-title">Phantom Mode</h2>
+                            <span class="card-icon">👻</span>
+                        </div>
+                        <p>Simula presencia en el hogar cuando estás fuera activando luces y dispositivos de forma aleatoria.</p>
+                        <div class="phantom-controls">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="phantomToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="phantomStatus">Desactivado</span>
+                            <button class="btn btn-outline" id="configurePhantom">Configurar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Contacto -->
+        <div id="contact" class="contact-section">
+            <div class="container">
+                <div class="contact-header">
+                    <h2>Nuestro Equipo</h2>
+                    <p>Conoce a los ingenieros detrás de Domótica Home, comprometidos con crear soluciones inteligentes para tu hogar.</p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-photo">SP</div>
+                        <h3 class="member-name">Santiago Ponce</h3>
+                        <p class="member-role">Ingeniero en Sistemas</p>
+                        <p class="member-bio">Especialista en automatización residencial con más de 10 años de experiencia en domótica y sistemas de control inteligente.</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-photo">LR</div>
+                        <h3 class="member-name">Leonardo Rivera </h3>
+                        <p class="member-role">Ingeniero Eléctrico</p>
+                        <p class="member-bio">Expertise en eficiencia energética y diseño de sistemas eléctricos para hogares inteligentes.</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-photo">Adiel Murillo</div>
+                        <h3 class="member-name">Lucas Espejo</h3>
+                        <p class="member-role">Ingeniero en Telecomunicaciones</p>
+                        <p class="member-bio">Especializado en conectividad y protocolos de comunicación para dispositivos IoT en el hogar.</p>
+                    </div>
+                </div>
+
+                <div class="company-info">
+                    <h3>Domótica Home</h3>
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-content">
+                                <h4>Dirección</h4>
+                                <p>Av. Tecnológica 123, Parque Industrial<br>Ciudad Inteligente</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">📞</div>
+                            <div class="detail-content">
+                                <h4>Teléfono</h4>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">✉️</div>
+                            <div class="detail-content">
+                                <h4>Email</h4>
+                                <p>info@domoticahome.com</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">🌐</div>
+                            <div class="detail-content">
+                                <h4>Sitio Web</h4>
+                                <p>www.domoticahome.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de configuración del Modo Fantasma -->
+    <div class="modal" id="phantomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configurar Phantom Mode</h2>
+                <button class="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Configura el comportamiento del modo fantasma para simular presencia cuando estés fuera de casa.</p>
+                <div style="margin-top: 20px;">
+                    <label for="phantomStart">Hora de inicio:</label>
+                    <input type="time" id="phantomStart" value="18:00" style="width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div>
+                    <label for="phantomEnd">Hora de fin:</label>
+                    <input type="time" id="phantomEnd" value="23:00" style="width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div>
+                    <label for="phantomRooms">Habitaciones a incluir:</label>
+                    <select id="phantomRooms" multiple="" style="width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; height: 100px;">
+                        <option value="living" selected="">Sala de Estar</option>
+                        <option value="kitchen" selected="">Cocina</option>
+                        <option value="bedroom" selected="">Dormitorio Principal</option>
+                        <option value="kids" selected="">Habitación Niños</option>
+                        <option value="bathroom">Baño</option>
+                        <option value="office" selected="">Oficina</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPhantom">Cancelar</button>
+                <button class="btn btn-primary" id="savePhantom">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de programación -->
+    <div class="modal" id="programModal">
+        <div class="modal-content program-modal">
+            <div class="modal-header">
+                <h2 id="programModalTitle">Programar Dispositivo</h2>
+                <button class="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="programModalDescription">Selecciona las opciones de programación para este dispositivo.</p>
+                <div class="program-options">
+                    <div class="program-option">
+                        <input type="radio" id="scheduleOnce" name="programType" value="once" checked="">
+                        <label for="scheduleOnce">Programar una vez</label>
+                    </div>
+                    <div class="program-option">
+                        <input type="radio" id="scheduleDaily" name="programType" value="daily">
+                        <label for="scheduleDaily">Programar diariamente</label>
+                    </div>
+                    <div class="program-option">
+                        <input type="radio" id="scheduleWeekly" name="programType" value="weekly">
+                        <label for="scheduleWeekly">Programar semanalmente</label>
+                    </div>
+                </div>
+                <div class="time-inputs">
+                    <div>
+                        <label for="programStart">Hora de inicio:</label>
+                        <input type="time" id="programStart" value="19:00">
+                    </div>
+                    <div>
+                        <label for="programEnd">Hora de fin:</label>
+                        <input type="time" id="programEnd" value="22:00">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelProgram">Cancelar</button>
+                <button class="btn btn-primary" id="saveProgram">Programar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Domótica Home © 2026 - Sistema de Control Inteligente para el Hogar</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dispositivos del sistema domótico con estados extendidos
+        const devices = {
+            "luces-sala": { 
+                name: "Luces LED Sala de Estar", 
+                status: true, 
+                consumption: 0.3,
+                mode: "normal", // normal, dimmed, off
+                room: "sala de estar",
+                keywords: ["luces sala", "luces led sala", "iluminación sala", "luces de sala", "luces sala estar"]
+            },
+            "aire-sala": { 
+                name: "Aire Acondicionado Sala", 
+                status: true, 
+                consumption: 1.5,
+                mode: "normal", // normal, eco, off
+                room: "sala de estar",
+                keywords: ["aire sala", "aire acondicionado sala", "ac sala", "clima sala", "aire sala estar"]
+            },
+            "tv": { 
+                name: "Televisor", 
+                status: true, 
+                consumption: 0.2,
+                mode: "normal", // normal, standby, off
+                room: "sala de estar",
+                keywords: ["televisor", "televisión", "tv", "tele", "pantalla"]
+            },
+            "refrigerador": { 
+                name: "Refrigerador", 
+                status: true, 
+                consumption: 0.8,
+                mode: "normal", // normal, ahorro, off
+                room: "cocina",
+                keywords: ["refrigerador", "nevera", "heladera", "frigorífico"]
+            },
+            "horno": { 
+                name: "Horno Eléctrico", 
+                status: true, 
+                consumption: 2.0,
+                mode: "normal", // normal, programado, off
+                room: "cocina",
+                keywords: ["horno", "horno eléctrico", "horno cocina", "horno electrico"]
+            },
+            "lavavajillas": { 
+                name: "Lavavajillas", 
+                status: false, 
+                consumption: 1.2,
+                mode: "off", // normal, programado, off
+                room: "cocina",
+                keywords: ["lavavajillas", "lavadora platos", "lavadora de platos"]
+            },
+            "luces-dormitorio": { 
+                name: "Luces LED Dormitorio Principal", 
+                status: true, 
+                consumption: 0.3,
+                mode: "normal", // normal, dimmed, off
+                room: "dormitorio principal",
+                keywords: ["luces dormitorio", "luces led dormitorio", "iluminación dormitorio", "luces habitación", "luces cuarto"]
+            },
+            "aire-dormitorio": { 
+                name: "Aire Acondicionado Dormitorio", 
+                status: false, 
+                consumption: 1.5,
+                mode: "off", // normal, programado, off
+                room: "dormitorio principal",
+                keywords: ["aire dormitorio", "aire acondicionado dormitorio", "ac dormitorio", "clima dormitorio", "aire habitación"]
+            },
+            "cargadores": { 
+                name: "Cargadores", 
+                status: true, 
+                consumption: 0.1,
+                mode: "normal", // normal, programado, off
+                room: "dormitorio principal",
+                keywords: ["cargadores", "cargador", "enchufes", "tomacorrientes"]
+            },
+            "luces-ninos": { 
+                name: "Luces LED Habitación Niños", 
+                status: true, 
+                consumption: 0.3,
+                mode: "normal", // normal, dimmed, off
+                room: "habitación niños",
+                keywords: ["luces niños", "luces led niños", "iluminación niños", "luces habitación niños", "luces cuarto niños"]
+            },
+            "computadora-ninos": { 
+                name: "Computadora Habitación Niños", 
+                status: true, 
+                consumption: 0.4,
+                mode: "normal", // normal, standby, off
+                room: "habitación niños",
+                keywords: ["computadora niños", "pc niños", "ordenador niños", "computadora habitación niños"]
+            },
+            "consolas": { 
+                name: "Consolas", 
+                status: true, 
+                consumption: 0.3,
+                mode: "normal", // normal, standby, off
+                room: "habitación niños",
+                keywords: ["consolas", "consola", "videojuegos", "playstation", "xbox", "nintendo"]
+            },
+            "calentador": { 
+                name: "Calentador Agua", 
+                status: true, 
+                consumption: 1.8,
+                mode: "normal", // normal, programado, off
+                room: "baño",
+                keywords: ["calentador", "calentador agua", "termo", "calefón", "calentador baño"]
+            },
+            "ventilacion": { 
+                name: "Ventilación", 
+                status: true, 
+                consumption: 0.2,
+                mode: "normal", // normal, temporizado, off
+                room: "baño",
+                keywords: ["ventilación", "ventilador", "extracción", "ventilador baño"]
+            },
+            "iluminacion-bano": { 
+                name: "Iluminación Baño", 
+                status: true, 
+                consumption: 0.2,
+                mode: "normal", // normal, sensor, off
+                room: "baño",
+                keywords: ["iluminación baño", "luces baño", "luz baño", "iluminacion baño"]
+            },
+            "pc-oficina": { 
+                name: "Computadora Oficina", 
+                status: true, 
+                consumption: 0.4,
+                mode: "normal", // normal, ahorro, off
+                room: "oficina",
+                keywords: ["computadora oficina", "pc oficina", "ordenador oficina", "computadora trabajo"]
+            },
+            "impresora": { 
+                name: "Impresora", 
+                status: true, 
+                consumption: 0.1,
+                mode: "normal", // normal, standby, off
+                room: "oficina",
+                keywords: ["impresora", "impresora oficina", "print", "printer"]
+            },
+            "iluminacion-oficina": { 
+                name: "Iluminación Oficina", 
+                status: true, 
+                consumption: 0.3,
+                mode: "normal", // normal, dimmed, off
+                room: "oficina",
+                keywords: ["iluminación oficina", "luces oficina", "luz oficina", "iluminacion oficina"]
+            }
+        };
+
+        // Simulación de datos de consumo
+        const consumptionData = [2.1, 1.8, 1.5, 1.2, 1.0, 1.5, 2.8, 3.5, 4.2, 5.1, 5.8, 6.2, 
+                                 6.5, 6.8, 7.2, 7.7, 7.5, 7.2, 6.8, 6.2, 5.5, 4.2, 3.1, 2.5];
+
+        // Elementos del DOM
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const contactPage = document.getElementById('contact');
+        const loginBtn = document.getElementById('loginBtn');
+        const usernameInput = document.getElementById('username');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const voiceFeedback = document.getElementById('voiceFeedback');
+        const generateReport = document.getElementById('generateReport');
+        const phantomToggle = document.getElementById('phantomToggle');
+        const phantomStatus = document.getElementById('phantomStatus');
+        const configurePhantom = document.getElementById('configurePhantom');
+        const phantomModal = document.getElementById('phantomModal');
+        const closeModal = document.querySelectorAll('.close-modal');
+        const cancelPhantom = document.getElementById('cancelPhantom');
+        const savePhantom = document.getElementById('savePhantom');
+        const programModal = document.getElementById('programModal');
+        const cancelProgram = document.getElementById('cancelProgram');
+        const saveProgram = document.getElementById('saveProgram');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Variables de control
+        let recognition = null;
+        let isListening = false;
+
+        // Inicializar gráfico de consumo
+        function initConsumptionChart() {
+            const chart = document.getElementById('consumptionChart');
+            chart.innerHTML = '';
+            
+            const maxConsumption = Math.max(...consumptionData);
+            const barWidth = (chart.offsetWidth - 40) / 24; // 24 horas, con margen
+            
+            for (let i = 0; i < 24; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${(consumptionData[i] / maxConsumption) * 180}px`;
+                bar.style.left = `${20 + i * barWidth}px`;
+                chart.appendChild(bar);
+            }
+        }
+
+        // Inicializar reconocimiento de voz
+        function initSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                voiceStatus.textContent = "⚠️ Tu navegador no soporta reconocimiento de voz";
+                voiceStatus.style.color = '#FF6B6B';
+                voiceBtn.disabled = true;
+                voiceBtn.style.opacity = '0.5';
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'es-ES';
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isListening = true;
+                voiceBtn.classList.add('listening');
+                voiceStatus.textContent = "🎤 Escuchando... ¡Habla ahora!";
+                voiceStatus.style.color = 'white';
+                voiceFeedback.textContent = "";
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+
+                if (interimTranscript) {
+                    voiceStatus.textContent = `Escuché: "${interimTranscript}"`;
+                }
+
+                if (finalTranscript) {
+                    const command = finalTranscript.toLowerCase().trim();
+                    voiceStatus.textContent = `📝 Dijiste: "${command}"`;
+                    processVoiceCommand(command);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Error de reconocimiento:', event.error);
+                
+                let errorMsg = '';
+                switch(event.error) {
+                    case 'no-speech':
+                        errorMsg = "No detecté ninguna voz. Intenta de nuevo.";
+                        break;
+                    case 'audio-capture':
+                        errorMsg = "No se puede acceder al micrófono.";
+                        break;
+                    case 'not-allowed':
+                        errorMsg = "⚠️ Permiso denegado. Activa el micrófono en la configuración.";
+                        break;
+                    case 'network':
+                        errorMsg = "Error de conexión. Verifica tu internet.";
+                        break;
+                    default:
+                        errorMsg = `Error: ${event.error}`;
+                }
+                
+                voiceStatus.textContent = errorMsg;
+                voiceStatus.style.color = '#FFD166';
+                voiceFeedback.textContent = "Intenta presionar el botón nuevamente";
+                resetVoiceButton();
+            };
+
+            recognition.onend = () => {
+                resetVoiceButton();
+            };
+        }
+
+        function resetVoiceButton() {
+            isListening = false;
+            voiceBtn.classList.remove('listening');
+            if (!voiceFeedback.textContent) {
+                setTimeout(() => {
+                    voiceStatus.textContent = "Presiona para hablar";
+                    voiceStatus.style.color = 'white';
+                }, 3000);
+            }
+        }
+
+        // Sistema mejorado de reconocimiento de comandos
+        function processVoiceCommand(command) {
+            console.log("Procesando comando:", command);
+            
+            // Normalizar el comando
+            const normalizedCommand = command
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
+                .replace(/[.,!?]/g, ""); // Eliminar puntuación
+
+            // Detectar acción
+            let action = detectAction(normalizedCommand);
+            if (!action) {
+                voiceFeedback.textContent = "❌ No entendí la acción. Di 'encender', 'apagar', 'atenuar', 'modo standby', 'modo eco' o 'programar'";
+                voiceFeedback.style.color = '#FFD166';
+                setTimeout(() => {
+                    voiceFeedback.textContent = "";
+                    voiceStatus.textContent = "Presiona para hablar";
+                }, 3000);
+                return;
+            }
+
+            // Buscar dispositivo
+            const deviceFound = findDevice(normalizedCommand);
+            if (!deviceFound) {
+                voiceFeedback.textContent = "❓ No identifiqué el dispositivo. Intenta ser más específico como 'encender luces led de sala de estar'";
+                voiceFeedback.style.color = '#FFD166';
+                setTimeout(() => {
+                    voiceFeedback.textContent = "";
+                    voiceStatus.textContent = "Presiona para hablar";
+                }, 4000);
+                return;
+            }
+
+            // Ejecutar acción
+            executeAction(deviceFound.id, action);
+            
+            // Feedback de éxito
+            const actionText = getActionText(action, deviceFound.name);
+            voiceFeedback.textContent = actionText;
+            voiceFeedback.style.color = 'white';
+            voiceFeedback.style.background = 'rgba(78, 205, 196, 0.5)';
+
+            setTimeout(() => {
+                voiceFeedback.textContent = "";
+                voiceFeedback.style.background = 'rgba(255,255,255,0.2)';
+                voiceStatus.textContent = "Presiona para hablar";
+            }, 4000);
+        }
+
+        // Detectar acción en el comando
+        function detectAction(command) {
+            const actionPatterns = {
+                "turnOn": /\b(enciende|prende|activa|enciende|prender|encender|activar|abrir|conectar)\b/,
+                "turnOff": /\b(apaga|desactiva|desactivar|apagar|cerrar|desconectar)\b/,
+                "dim": /\b(atenuar|bajar intensidad|disminuir brillo|atenuar luces)\b/,
+                "standby": /\b(modo standby|standby|suspender|modo espera|espera)\b/,
+                "eco": /\b(modo eco|eco|ahorro energético|ahorro|eficiente)\b/,
+                "program": /\b(programar|temporizar|programa|temporiza)\b/
+            };
+
+            for (const [action, pattern] of Object.entries(actionPatterns)) {
+                if (pattern.test(command)) {
+                    return action;
+                }
+            }
+            return null;
+        }
+
+        // Buscar dispositivo en el comando
+        function findDevice(command) {
+            let bestMatch = null;
+            let bestScore = 0;
+
+            for (const [deviceId, device] of Object.entries(devices)) {
+                let score = 0;
+                
+                // Buscar por palabras clave específicas del dispositivo
+                for (const keyword of device.keywords) {
+                    if (command.includes(keyword)) {
+                        score += keyword.length * 2; // Peso mayor para coincidencias exactas
+                    }
+                }
+                
+                // Buscar por nombre del dispositivo
+                const deviceNameWords = device.name.toLowerCase().split(' ');
+                for (const word of deviceNameWords) {
+                    if (command.includes(word) && word.length > 3) {
+                        score += word.length;
+                    }
+                }
+                
+                // Buscar por habitación
+                if (command.includes(device.room)) {
+                    score += device.room.length * 1.5;
+                }
+                
+                // Si encontramos una coincidencia mejor, la guardamos
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMatch = { id: deviceId, ...device };
+                }
+            }
+
+            // Solo devolvemos el dispositivo si tiene un score mínimo
+            return bestScore > 5 ? bestMatch : null;
+        }
+
+        // Ejecutar acción en el dispositivo
+        function executeAction(deviceId, action) {
+            switch(action) {
+                case "turnOn":
+                    toggleDevice(deviceId, true);
+                    break;
+                case "turnOff":
+                    toggleDevice(deviceId, false);
+                    break;
+                case "dim":
+                    setDeviceMode(deviceId, "dimmed");
+                    break;
+                case "standby":
+                    setDeviceMode(deviceId, "standby");
+                    break;
+                case "eco":
+                    setDeviceMode(deviceId, "eco");
+                    break;
+                case "program":
+                    setDeviceMode(deviceId, "programmed");
+                    break;
+            }
+        }
+
+        // Obtener texto descriptivo de la acción
+        function getActionText(action, deviceName) {
+            const actionTexts = {
+                "turnOn": `✅ ${deviceName} encendido`,
+                "turnOff": `❌ ${deviceName} apagado`,
+                "dim": `💡 ${deviceName} atenuado`,
+                "standby": `⏸️ ${deviceName} en modo standby`,
+                "eco": `🌱 ${deviceName} en modo eco`,
+                "program": `⏰ ${deviceName} programado`
+            };
+            return actionTexts[action] || `Acción ejecutada en ${deviceName}`;
+        }
+
+        // Función para encender/apagar dispositivos
+        function toggleDevice(deviceId, status) {
+            if (devices[deviceId]) {
+                devices[deviceId].status = status;
+                if (!status) {
+                    devices[deviceId].mode = "off";
+                } else if (devices[deviceId].mode === "off") {
+                    devices[deviceId].mode = "normal";
+                }
+                updateDeviceUI(deviceId);
+                updateConsumption();
+                showNotification(`${devices[deviceId].name} ${status ? 'encendido' : 'apagado'}`);
+            }
+        }
+
+        // Función para establecer modo del dispositivo
+        function setDeviceMode(deviceId, mode) {
+            if (devices[deviceId]) {
+                devices[deviceId].mode = mode;
+                if (mode !== "off") {
+                    devices[deviceId].status = true;
+                }
+                updateDeviceUI(deviceId);
+                updateConsumption();
+                
+                let modeText = "";
+                switch(mode) {
+                    case "dimmed": modeText = "atenuado"; break;
+                    case "standby": modeText = "en modo standby"; break;
+                    case "eco": modeText = "en modo eco"; break;
+                    case "programmed": modeText = "programado"; break;
+                    case "normal": modeText = "en modo normal"; break;
+                }
+                
+                showNotification(`${devices[deviceId].name} ${modeText}`);
+            }
+        }
+
+        // Actualizar interfaz de dispositivo
+        function updateDeviceUI(deviceId) {
+            const device = devices[deviceId];
+            const statusElement = document.querySelector(`[data-device="${deviceId}"]`);
+            const powerButton = document.querySelector(`.btn-power[data-device="${deviceId}"]`);
+            const dimmerButton = document.querySelector(`.btn-dimmer[data-device="${deviceId}"]`);
+            const standbyButton = document.querySelector(`.btn-standby[data-device="${deviceId}"]`);
+            const programButton = document.querySelector(`.btn-program[data-device="${deviceId}"]`);
+            
+            if (statusElement) {
+                // Actualizar estado visual
+                statusElement.className = 'device-status';
+                
+                if (!device.status) {
+                    statusElement.classList.add('off');
+                } else {
+                    switch(device.mode) {
+                        case "dimmed":
+                            statusElement.classList.add('dimmed');
+                            break;
+                        case "standby":
+                            statusElement.classList.add('standby');
+                            break;
+                        case "programmed":
+                        case "eco":
+                            statusElement.classList.add('programmed');
+                            break;
+                        default:
+                            statusElement.classList.add('on');
+                    }
+                }
+            }
+            
+            // Actualizar botones de poder
+            if (powerButton) {
+                powerButton.textContent = device.status ? 'Apagar' : 'Encender';
+                powerButton.className = device.status ? 
+                    'btn btn-outline btn-power' : 'btn btn-primary btn-power';
+            }
+            
+            // Actualizar estado de botones de modo
+            if (dimmerButton) {
+                dimmerButton.classList.toggle('active', device.mode === 'dimmed');
+            }
+            if (standbyButton) {
+                standbyButton.classList.toggle('active', device.mode === 'standby');
+            }
+            if (programButton) {
+                programButton.classList.toggle('active', 
+                    device.mode === 'programmed' || device.mode === 'eco');
+            }
+        }
+
+        // Actualizar consumo total
+        function updateConsumption() {
+            let totalConsumption = 0;
+            for (const deviceId in devices) {
+                if (devices[deviceId].status) {
+                    // Consumo reducido en modos especiales
+                    let consumptionMultiplier = 1;
+                    switch(devices[deviceId].mode) {
+                        case "dimmed": consumptionMultiplier = 0.5; break;
+                        case "standby": consumptionMultiplier = 0.2; break;
+                        case "eco": consumptionMultiplier = 0.7; break;
+                    }
+                    totalConsumption += devices[deviceId].consumption * consumptionMultiplier;
+                }
+            }
+            
+            const consumptionValue = document.querySelector('.consumption-value');
+            if (consumptionValue) {
+                consumptionValue.textContent = totalConsumption.toFixed(1);
+            }
+        }
+
+        // Mostrar notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: var(--shadow);
+                z-index: 10000;
+                transition: all 0.3s;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Event Listeners
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (username) {
+                userName.textContent = username;
+                userAvatar.textContent = username.charAt(0).toUpperCase();
+                loginScreen.style.display = 'none';
+                dashboard.style.display = 'block';
+                initConsumptionChart();
+                initSpeechRecognition();
+                updateConsumption();
+                
+                // Inicializar estado de la UI para todos los dispositivos
+                for (const deviceId in devices) {
+                    updateDeviceUI(deviceId);
+                }
+            } else {
+                alert('¡Por favor ingresa tu nombre!');
+            }
+        });
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        // Navegación
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-target');
+                
+                // Actualizar navegación activa
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                if (target === 'dashboard') {
+                    contactPage.style.display = 'none';
+                    dashboard.style.display = 'block';
+                } else if (target === 'contact') {
+                    dashboard.style.display = 'none';
+                    contactPage.style.display = 'block';
+                }
+            });
+        });
+
+        // Control por voz
+        voiceBtn.addEventListener('click', () => {
+            if (!recognition) {
+                voiceStatus.textContent = "⚠️ Reconocimiento de voz no disponible";
+                return;
+            }
+
+            if (!isListening) {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    if (error.name === 'InvalidStateError') {
+                        recognition.stop();
+                        setTimeout(() => {
+                            try {
+                                recognition.start();
+                            } catch (e) {
+                                console.error("Error al reintentar:", e);
+                                voiceStatus.textContent = "Error. Recarga la página.";
+                            }
+                        }, 200);
+                    } else {
+                        console.error("Error:", error);
+                        voiceStatus.textContent = "❌ Error al iniciar micrófono";
+                        voiceFeedback.textContent = "Verifica los permisos del navegador";
+                    }
+                }
+            } else {
+                recognition.stop();
+            }
+        });
+
+        // Botones de control de dispositivos
+        document.querySelectorAll('.btn-power').forEach(button => {
+            button.addEventListener('click', function() {
+                const deviceId = this.getAttribute('data-device');
+                const currentStatus = devices[deviceId].status;
+                toggleDevice(deviceId, !currentStatus);
+            });
+        });
+
+        document.querySelectorAll('.btn-dimmer').forEach(button => {
+            button.addEventListener('click', function() {
+                const deviceId = this.getAttribute('data-device');
+                setDeviceMode(deviceId, "dimmed");
+            });
+        });
+
+        document.querySelectorAll('.btn-standby').forEach(button => {
+            button.addEventListener('click', function() {
+                const deviceId = this.getAttribute('data-device');
+                setDeviceMode(deviceId, "standby");
+            });
+        });
+
+        document.querySelectorAll('.btn-program').forEach(button => {
+            button.addEventListener('click', function() {
+                const deviceId = this.getAttribute('data-device');
+                const device = devices[deviceId];
+                
+                // Configurar título y descripción del modal según el dispositivo
+                document.getElementById('programModalTitle').textContent = `Programar ${device.name}`;
+                document.getElementById('programModalDescription').textContent = 
+                    `Configura la programación para ${device.name.toLowerCase()}.`;
+                
+                // Mostrar modal de programación
+                programModal.style.display = 'flex';
+                programModal.currentDevice = deviceId;
+            });
+        });
+
+        // Guardar programación
+        saveProgram.addEventListener('click', function() {
+            const programType = document.querySelector('input[name="programType"]:checked').value;
+            const startTime = document.getElementById('programStart').value;
+            const endTime = document.getElementById('programEnd').value;
+            
+            const deviceId = programModal.currentDevice;
+            if (deviceId) {
+                setDeviceMode(deviceId, "programmed");
+                showNotification(`${devices[deviceId].name} programado de ${startTime} a ${endTime} (${programType})`);
+            }
+            
+            programModal.style.display = 'none';
+        });
+
+        cancelProgram.addEventListener('click', function() {
+            programModal.style.display = 'none';
+        });
+
+        // Generar reporte PDF
+        generateReport.addEventListener('click', function() {
+            html2canvas(document.querySelector('.dashboard-section')).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save('reporte-consumo-domotica.pdf');
+                showNotification('Reporte PDF generado correctamente');
+            });
+        });
+
+        // Modo Fantasma
+        phantomToggle.addEventListener('change', function() {
+            if (this.checked) {
+                phantomStatus.textContent = 'Activado';
+                showNotification('Modo Fantasma activado');
+            } else {
+                phantomStatus.textContent = 'Desactivado';
+                showNotification('Modo Fantasma desactivado');
+            }
+        });
+
+        configurePhantom.addEventListener('click', function() {
+            phantomModal.style.display = 'flex';
+        });
+
+        closeModal.forEach(btn => {
+            btn.addEventListener('click', function() {
+                phantomModal.style.display = 'none';
+                programModal.style.display = 'none';
+            });
+        });
+
+        cancelPhantom.addEventListener('click', function() {
+            phantomModal.style.display = 'none';
+        });
+
+        savePhantom.addEventListener('click', function() {
+            showNotification('Configuración del Modo Fantasma guardada');
+            phantomModal.style.display = 'none';
+        });
+
+        // Simulación de cambios en tiempo real
+        function simulateRealTimeChanges() {
+            // Cambiar aleatoriamente el consumo de algunos dispositivos
+            const consumptionValues = document.querySelectorAll('.consumption-value');
+            consumptionValues.forEach(value => {
+                const currentValue = parseFloat(value.textContent);
+                const change = (Math.random() - 0.5) * 0.4;
+                const newValue = Math.max(0.1, currentValue + change).toFixed(1);
+                value.textContent = newValue;
+            });
+        }
+
+        // Inicializar la aplicación
+        window.addEventListener('load', function() {
+            // Actualizar cada 5 segundos para simular cambios en tiempo real
+            setInterval(simulateRealTimeChanges, 5000);
+        });
+
+        // Hacer responsive el gráfico al redimensionar la ventana
+        window.addEventListener('resize', initConsumptionChart);
+    </script>
+
+
+</body></html>
